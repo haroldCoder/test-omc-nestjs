@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Get, Param, Put, Delete } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
+import { Body, Controller, Post, Get, Param, Put, Delete, Query } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from "@nestjs/swagger";
 import { CreateLeadUseCase, FindAllLeadsUseCase, FindLeadUseCase, UpdateLeadUseCase, DeleteLeadUseCase } from "../../application/use-cases";
 import { LeadEntity } from "../../domain/entities";
-import { CreateLeadDto, UpdateLeadDto } from "../dtos";
+import { CreateLeadDto, LeadQueriesDto, UpdateLeadDto } from "../dtos";
+import { FountainEnum } from "../../domain/enums";
 
 @ApiTags('Leads')
 @Controller('api/v1/leads')
@@ -28,8 +29,37 @@ export class LeadController {
     @ApiOperation({ summary: 'Listar todos los leads', description: 'Obtiene una lista completa de todos los leads registrados en el sistema.' })
     @ApiResponse({ status: 200, description: 'Listado obtenido con éxito.', type: [LeadEntity] })
     @ApiResponse({ status: 500, description: 'Error interno del servidor al buscar los leads.' })
-    async findAll(): Promise<LeadEntity[]> {
-        return this.findAllLeadsUseCase.execute();
+    @ApiQuery({
+        name: 'page',
+        type: Number,
+        description: 'Número de página',
+        required: false
+    })
+    @ApiQuery({
+        name: 'limit',
+        type: Number,
+        description: 'Número de leads por página',
+        required: false
+    })
+    @ApiQuery({
+        name: 'fountain',
+        enum: FountainEnum,
+        description: 'Fuente del lead',
+        required: false
+    })
+    @ApiQuery({
+        name: 'range_date',
+        description: 'Rango de fechas (formato YYYY-MM-DD,YYYY-MM-DD o YYYY-MM-DD)',
+        required: false
+    })
+    @ApiQuery({
+        name: 'order_date',
+        enum: ['ASC', 'DESC'],
+        description: 'Orden de la fecha',
+        required: false
+    })
+    async findAll(@Query() queries?: LeadQueriesDto): Promise<LeadEntity[]> {
+        return this.findAllLeadsUseCase.execute(queries);
     }
 
     @Get(':id')

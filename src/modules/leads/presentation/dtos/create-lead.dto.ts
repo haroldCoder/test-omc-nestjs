@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsNotEmpty, IsEmail, IsString, IsOptional, IsEnum, IsNumber } from "class-validator";
+import { IsNotEmpty, IsEmail, IsString, IsOptional, IsEnum, IsNumber, IsDate } from "class-validator";
 import { FountainEnum } from "../../domain/enums";
+import { Type } from "class-transformer";
 
 export class CreateLeadDto {
     @ApiProperty({
@@ -51,4 +52,14 @@ export class CreateLeadDto {
     @IsOptional()
     @IsNumber()
     budget?: number;
+
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    createdAt?: Date;
+
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    updatedAt?: Date;
 }

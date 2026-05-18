@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LeadEntity } from '../../domain/entities';
+import { LeadEntity, LeadQueriesEntity } from '../../domain/entities';
 import { ILeadRepository } from '../../domain/repositories';
 import { LeadNotFoundException } from '../../domain/exception';
 import { LeadDocument } from '../schemas';
@@ -19,8 +19,51 @@ export class LeadRepositoryImplementation implements ILeadRepository {
         return result.id;
     }
 
-    async findAll(): Promise<LeadEntity[]> {
-        const leads = await this.leadModel.find();
+    async findAll(queries?: LeadQueriesEntity): Promise<LeadEntity[]> {
+        const filter: any = {}; // este de aqui es todo los filtros de el schema lead
+
+        // filtro por fuente
+        if (queries?.fountain) {
+            filter.source = queries.fountain; // 'source' en la base de datos
+        }
+
+        // filtro de fechas (soporta fecha única o rango separado por coma YYYY-MM-DD,YYYY-MM-DD)
+        if (queries?.range_date) {
+            const dates = queries.range_date.split(',');
+            if (dates.length === 2 && dates[0] && dates[1]) {
+                const startDate = new Date(dates[0].trim());
+                const endDate = new Date(dates[1].trim());
+
+                // Si es formato YYYY-MM-DD (longitud 10), extendemos la fecha fin hasta el final del día en UTC
+                if (dates[1].trim().length === 10) {
+                    endDate.setUTCHours(23, 59, 59, 999);
+                }
+
+                filter.created_at = {
+                    $gte: startDate,
+                    $lte: endDate,
+                };
+            } else if (dates[0]) {
+                filter.created_at = {
+                    $gte: new Date(dates[0].trim()),
+                };
+            }
+        }
+
+        // orden
+        const sortBy = (queries?.order_date === 'ASC' ? 1 : -1) as 1 | -1;
+
+        const page = Math.max(1, Number(queries?.page ?? 1));
+        const limit = Math.max(1, Number(queries?.limit ?? 10));
+
+        const pipeline = [
+            { $match: filter },
+            { $sort: { created_at: sortBy, _id: sortBy } }, // Ordenación secundaria estable con _id para evitar no-determinismo
+            { $skip: (page - 1) * limit },
+            { $limit: limit }
+        ];
+
+        const leads = await this.leadModel.aggregate(pipeline);
         return leads.map(doc => LeadMapper.toDomain(doc));
     }
 

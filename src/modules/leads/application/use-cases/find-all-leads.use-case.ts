@@ -1,4 +1,4 @@
-import { LeadEntity } from "../../domain/entities";
+import { LeadEntity, LeadQueriesEntity } from "../../domain/entities";
 import { ILeadRepository } from "../../domain/repositories";
 import { Injectable } from "@nestjs/common";
 
@@ -6,9 +6,9 @@ import { Injectable } from "@nestjs/common";
 export class FindAllLeadsUseCase {
     constructor(private readonly leadRepository: ILeadRepository) { }
 
-    async execute(): Promise<LeadEntity[]> {
+    async execute(queries?: LeadQueriesEntity): Promise<LeadEntity[]> {
         try {
-            const leads = await this.leadRepository.findAll();
+            const leads = await this.leadRepository.findAll(queries);
             return leads;
         }
         catch (error) {

@@ -12,6 +12,8 @@ export class LeadMapper {
         entity.fountain = document.source as FountainEnum; // Mapea 'source' (base de datos) a 'fountain' (entidad de dominio)
         entity.interest_product = document.productInterest; // Mapea 'productInterest' (base de datos) a 'interest_product' (entidad de dominio)
         entity.budget = document.budget;
+        entity.createdAt = document.created_at;
+        entity.updatedAt = document.updated_at;
         return entity;
     }
 

@@ -45,6 +45,18 @@ export class LeadEntity { // Entidad de dominio para representar un Lead
     })
     budget?: number;
 
+    @ApiPropertyOptional({
+        description: 'Fecha de creación del lead.',
+        example: '2022-01-01T00:00:00.000Z'
+    })
+    createdAt?: Date;
+
+    @ApiPropertyOptional({
+        description: 'Fecha de última actualización del lead.',
+        example: '2022-01-01T00:00:00.000Z'
+    })
+    updatedAt?: Date;
+
     isEmailValid(): boolean {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(this.email);
@@ -82,6 +94,8 @@ export class LeadEntity { // Entidad de dominio para representar un Lead
         this.fountain = data.fountain;
         this.interest_product = data.interest_product;
         this.budget = data.budget;
+        this.createdAt = data.createdAt;
+        this.updatedAt = data.updatedAt;
 
         if (!this.isValid()) {
             throw new Error('datos invalidos para la creacion del lead');
