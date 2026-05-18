@@ -82,6 +82,12 @@ docker-compose exec -T mongodb mongosh mongodb://localhost:27017/omc_leads_db /s
 La API cuenta con soporte completo interactivo en Swagger. Puedes ingresar a la interfaz visual desde tu navegador en:  
 👉 **[http://localhost:3000/api/docs](http://localhost:3000/api/docs)**
 
+> [!IMPORTANT]
+> **Autenticación en Swagger UI (¡Evita el error 401!)**
+> Al hacer clic en el botón **Authorize** en la esquina superior derecha de la interfaz de Swagger UI para inyectar tu token:
+> * **Formato Correcto:** Pega **únicamente** la cadena larga del token (ej. `eyJhbGciOi...`). Swagger UI de forma automática añade el prefijo `Bearer ` en la cabecera de la petición.
+> * **Formato Incorrecto:** Evita escribir la palabra `Bearer ` manualmente. Si ingresas `Bearer eyJ...`, Swagger transmitirá `Bearer Bearer eyJ...`, lo que provocará que el servidor rechace la petición con un error **`401 Unauthorized`**.
+
 También puedes probar los endpoints principales utilizando `curl` en tu terminal:
 
 ### 1. Registrar un Lead (Creación)

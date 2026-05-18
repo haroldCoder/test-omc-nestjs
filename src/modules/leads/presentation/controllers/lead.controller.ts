@@ -1,11 +1,14 @@
-import { Body, Controller, Post, Get, Param, Put, Delete, Query } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from "@nestjs/swagger";
+import { Body, Controller, Post, Get, Param, Put, Delete, Query, UseGuards } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery, ApiBearerAuth } from "@nestjs/swagger";
 import { CreateLeadUseCase, FindAllLeadsUseCase, FindLeadUseCase, UpdateLeadUseCase, DeleteLeadUseCase, GetStatsUseCase, GetSummaryUseCase } from "../../application/use-cases";
 import { LeadEntity, StatsEntity } from "../../domain/entities";
 import { CreateLeadDto, LeadQueriesDto, UpdateLeadDto } from "../dtos";
 import { FountainEnum } from "../../domain/enums";
+import { JwtAuthGuard } from "../../../auth/presentation/guards/jwt-auth.guard";
 
 @ApiTags('Leads')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/leads')
 export class LeadController {
     constructor(

@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './core/infrastructure/database/database.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
     }]),
     DatabaseModule, // Conexión global a MongoDB
     LeadsModule, // Módulo de Leads (Mongoose Schema, Casos de Uso y Repositorios)
+    AuthModule, // Módulo de Autenticación JWT y Usuarios
   ],
   controllers: [AppController],
   providers: [

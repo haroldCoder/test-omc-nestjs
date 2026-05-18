@@ -27,6 +27,7 @@ async function bootstrap(): Promise<any> {
       .setDescription('Servicio RESTful para el registro, consulta y gestión de leads comerciales.')
       .setVersion('1.0')
       .addTag('Leads', 'Operaciones relacionadas con la administración de leads')
+      .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
