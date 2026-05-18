@@ -154,3 +154,43 @@ Para asegurar que ningún cambio rompa la lógica del negocio o de la IA, ejecut
 ```bash
 npm run test
 ```
+
+---
+
+## ☁️ Despliegue en Vercel (Serverless)
+
+Esta API está completamente preparada para ser desplegada en **Vercel** como una función Serverless de alto rendimiento.
+
+### 1. Requisitos e Integración
+Hemos añadido los siguientes archivos de configuración necesarios:
+* **`vercel.json`**: Configura la redirección de todo el tráfico HTTP entrante hacia nuestra función de entrada.
+* **`api/index.ts`**: Inicializa de forma óptima el servidor de NestJS con soporte para CORS, DTOs y Swagger en el entorno serverless de Vercel, reutilizando la instancia inicializada para acelerar las peticiones posteriores.
+
+### 2. Pasos para el Despliegue con Vercel CLI
+Desde la carpeta raíz del proyecto, ejecuta el siguiente comando en tu terminal:
+```bash
+# Iniciar el proceso de despliegue e interactuar con Vercel CLI
+vercel
+```
+
+Vercel CLI te hará un par de preguntas básicas. Puedes presionar **Enter** para usar las opciones por defecto:
+* `Set up and deploy?` **yes**
+* `Which scope?` **[Tu Usuario]**
+* `Link to existing project?` **no**
+* `What's your project's name?` **test-omc-nestjs**
+* `In which directory is your code located?` **./**
+* `Want to modify these settings?` **no**
+
+### 3. Configurar Variables de Entorno en Vercel
+Una vez que el proyecto esté vinculado, debes configurar tus secretos directamente en el dashboard de tu proyecto en Vercel o usando la terminal:
+```bash
+vercel env add MONGO_URI
+vercel env add GEMINI_API_KEY
+```
+
+### 4. Despliegue en Producción
+Para desplegar la versión final a producción, ejecuta:
+```bash
+vercel --prod
+```
+
