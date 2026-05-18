@@ -6,11 +6,13 @@ import { ILeadRepository } from '../../domain/repositories';
 import { LeadNotFoundException } from '../../domain/exception';
 import { LeadDocument } from '../schemas';
 import { LeadMapper } from '../mappers';
+import { LeadsAiSummaryService } from './services';
 
 @Injectable()
 export class LeadRepositoryImplementation implements ILeadRepository {
     constructor(
         @InjectModel(LeadDocument.name) private readonly leadModel: Model<LeadDocument>,
+        private readonly leadsAiSummaryService: LeadsAiSummaryService
     ) { }
 
     async create(data: LeadEntity): Promise<string> {
@@ -154,5 +156,9 @@ export class LeadRepositoryImplementation implements ILeadRepository {
             budget_average,
             leads_last_seven_days
         });
+    }
+
+    async summary(filters?: LeadQueriesEntity): Promise<string> {
+        return this.leadsAiSummaryService.getSummary(filters); // esto lo decido poner asi, para reducir el tamaño del archivo y separar responsabilidades
     }
 }

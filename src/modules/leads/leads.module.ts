@@ -8,10 +8,12 @@ import {
     FindLeadUseCase,
     UpdateLeadUseCase,
     DeleteLeadUseCase,
-    GetStatsUseCase
+    GetStatsUseCase,
+    GetSummaryUseCase
 } from './application/use-cases';
 import { LeadDocument, LeadSchema } from './infrastructure/schemas';
 import { LeadController } from './presentation/controllers';
+import { LeadsAiSummaryService } from './infrastructure/persistance/services';
 
 @Module({
     imports: [
@@ -21,6 +23,7 @@ import { LeadController } from './presentation/controllers';
     ],
     controllers: [LeadController],
     providers: [
+        LeadsAiSummaryService,
         // Enlazar la interfaz (ILeadRepository) a la implementación concreta (LeadRepositoryImplementation)
         {
             provide: ILeadRepository,
@@ -32,7 +35,8 @@ import { LeadController } from './presentation/controllers';
         FindLeadUseCase,
         UpdateLeadUseCase,
         DeleteLeadUseCase,
-        GetStatsUseCase
+        GetStatsUseCase,
+        GetSummaryUseCase
     ],
     exports: [
         ILeadRepository,
@@ -41,7 +45,8 @@ import { LeadController } from './presentation/controllers';
         FindLeadUseCase,
         UpdateLeadUseCase,
         DeleteLeadUseCase,
-        GetStatsUseCase
+        GetStatsUseCase,
+        GetSummaryUseCase
     ],
 })
 export class LeadsModule { }

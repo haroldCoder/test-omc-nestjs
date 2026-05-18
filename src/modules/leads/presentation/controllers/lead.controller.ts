@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Get, Param, Put, Delete, Query } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from "@nestjs/swagger";
-import { CreateLeadUseCase, FindAllLeadsUseCase, FindLeadUseCase, UpdateLeadUseCase, DeleteLeadUseCase, GetStatsUseCase } from "../../application/use-cases";
+import { CreateLeadUseCase, FindAllLeadsUseCase, FindLeadUseCase, UpdateLeadUseCase, DeleteLeadUseCase, GetStatsUseCase, GetSummaryUseCase } from "../../application/use-cases";
 import { LeadEntity, StatsEntity } from "../../domain/entities";
 import { CreateLeadDto, LeadQueriesDto, UpdateLeadDto } from "../dtos";
 import { FountainEnum } from "../../domain/enums";
@@ -14,7 +14,8 @@ export class LeadController {
         private readonly findLeadUseCase: FindLeadUseCase,
         private readonly updateLeadUseCase: UpdateLeadUseCase,
         private readonly deleteLeadUseCase: DeleteLeadUseCase,
-        private readonly getStatsUseCase: GetStatsUseCase
+        private readonly getStatsUseCase: GetStatsUseCase,
+        private readonly getSummaryUseCase: GetSummaryUseCase
     ) { }
 
     @Post()
@@ -69,6 +70,25 @@ export class LeadController {
     @ApiResponse({ status: 500, description: 'Error interno del servidor al obtener las estadísticas.' })
     async stats(): Promise<StatsEntity> {
         return this.getStatsUseCase.execute();
+    }
+
+    @Get('/ai/summary')
+    @ApiOperation({ summary: 'Obtener resumen ejecutivo por IA', description: 'Genera un resumen analítico de los leads filtrados utilizando Inteligencia Artificial.' })
+    @ApiQuery({
+        name: 'fountain',
+        enum: FountainEnum,
+        description: 'Filtrar leads por fuente',
+        required: false
+    })
+    @ApiQuery({
+        name: 'range_date',
+        description: 'Filtrar leads por rango de fechas (YYYY-MM-DD,YYYY-MM-DD o YYYY-MM-DD)',
+        required: false
+    })
+    @ApiResponse({ status: 200, description: 'Resumen ejecutivo generado exitosamente.', type: String })
+    @ApiResponse({ status: 500, description: 'Error al generar el resumen ejecutivo.' })
+    async summary(@Query() queries?: LeadQueriesDto): Promise<string> {
+        return this.getSummaryUseCase.execute(queries);
     }
 
     @Get(':id')
