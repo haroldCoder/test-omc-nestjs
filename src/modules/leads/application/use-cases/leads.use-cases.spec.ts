@@ -4,6 +4,7 @@ import { FindAllLeadsUseCase } from './find-all-leads.use-case';
 import { FindLeadUseCase } from './find-lead.use-case';
 import { UpdateLeadUseCase } from './update-lead.use-case';
 import { DeleteLeadUseCase } from './delete-lead.use-case';
+import { GetSummaryUseCase } from './get-summary.use-case';
 import { ILeadRepository } from '../../domain/repositories';
 import { LeadEntity } from '../../domain/entities';
 import { FountainEnum } from '../../domain/enums';
@@ -15,6 +16,7 @@ describe('Leads Use Cases', () => {
     let findLeadUseCase: FindLeadUseCase;
     let updateLeadUseCase: UpdateLeadUseCase;
     let deleteLeadUseCase: DeleteLeadUseCase;
+    let getSummaryUseCase: GetSummaryUseCase;
     let mockLeadRepository: jest.Mocked<ILeadRepository>;
 
     beforeEach(async () => {
@@ -24,6 +26,8 @@ describe('Leads Use Cases', () => {
             findById: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
+            stats: jest.fn(),
+            summary: jest.fn(),
         };
 
         const module: TestingModule = await Test.createTestingModule({
@@ -33,6 +37,7 @@ describe('Leads Use Cases', () => {
                 FindLeadUseCase,
                 UpdateLeadUseCase,
                 DeleteLeadUseCase,
+                GetSummaryUseCase,
                 {
                     provide: ILeadRepository,
                     useValue: repositoryMock,
@@ -45,6 +50,7 @@ describe('Leads Use Cases', () => {
         findLeadUseCase = module.get<FindLeadUseCase>(FindLeadUseCase);
         updateLeadUseCase = module.get<UpdateLeadUseCase>(UpdateLeadUseCase);
         deleteLeadUseCase = module.get<DeleteLeadUseCase>(DeleteLeadUseCase);
+        getSummaryUseCase = module.get<GetSummaryUseCase>(GetSummaryUseCase);
         mockLeadRepository = module.get(ILeadRepository);
     });
 
@@ -209,6 +215,25 @@ describe('Leads Use Cases', () => {
 
             await expect(deleteLeadUseCase.execute('some-id')).rejects.toThrow(
                 'Error al eliminar el lead',
+            );
+        });
+    });
+
+    describe('GetSummaryUseCase', () => {
+        it('debe retornar el resumen del repositorio exitosamente', async () => {
+            mockLeadRepository.summary.mockResolvedValue('Resumen ejecutivo de IA');
+
+            const result = await getSummaryUseCase.execute();
+
+            expect(result).toBe('Resumen ejecutivo de IA');
+            expect(mockLeadRepository.summary).toHaveBeenCalled();
+        });
+
+        it('debe lanzar un error genérico si el repositorio falla al generar el resumen', async () => {
+            mockLeadRepository.summary.mockRejectedValue(new Error('Summary error'));
+
+            await expect(getSummaryUseCase.execute()).rejects.toThrow(
+                'Error al generar el resumen de leads',
             );
         });
     });
