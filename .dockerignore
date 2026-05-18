@@ -1,0 +1,21 @@
+# Ignorar dependencias locales
+node_modules/
+npm-debug.log
+
+# Ignorar archivos compilados locales
+dist/
+dist-serverless/
+.vercel/
+
+# Ignorar archivos de Git y configuración local
+.git/
+.gitignore
+.gitattributes
+
+# Ignorar variables de entorno secretas (se inyectan a través de compose o hosting)
+.env
+.env.production
+
+# Ignorar archivos del sistema operativo
+.DS_Store
+Thumbs.db

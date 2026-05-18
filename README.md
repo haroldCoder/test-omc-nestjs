@@ -28,34 +28,59 @@ Asegúrate de tener instalados en tu sistema local:
 
 ## 📦 Instalación e Inicio de la Aplicación
 
-1. **Clonar e ingresar al repositorio:**
-   ```bash
-   cd /home/koder/Documentos/test-omc-nestjs
-   ```
+Puedes ejecutar este proyecto de dos formas distintas: **Modo Contenerizado con Docker Compose (Recomendado)** para levantar todo el ecosistema (Base de datos + API + Visualizador) con un solo comando, o **Modo de Desarrollo Local** para trabajar directamente sobre el código.
 
-2. **Instalar dependencias de Node.js:**
-   ```bash
-   npm install
-   ```
+---
 
-3. **Configurar Variables de Entorno:**
+### Opción A: Modo Contenerizado Completo (Docker Compose) - ¡Recomendado! 🚀
+
+Este modo compila la aplicación NestJS en una imagen multi-etapa súper ligera y optimizada, y la orquesta junto con MongoDB y Mongo Express.
+
+1. **Configurar Variables de Entorno:**
    Copia el archivo de ejemplo para crear tu archivo `.env`:
    ```bash
    cp .env.example .env
    ```
-   *Nota: Abre el archivo `.env` resultante y configura tu `GEMINI_API_KEY` (clave de Google AI Studio) para habilitar el resumen real de IA.*
+   *Abre el archivo `.env` y configura tus claves (como `GEMINI_API_KEY` y `JWT_SECRET`).*
 
-4. **Levantar base de datos en Docker:**
-   Inicia el contenedor de MongoDB en segundo plano:
+2. **Levantar todo el ecosistema con un solo comando:**
    ```bash
-   docker-compose up -d
+   docker compose up --build -d
    ```
 
-5. **Iniciar el Servidor en modo Desarrollo:**
+3. **Verificar Servicios en Línea:**
+   * **API de NestJS (Backend):** Disponible en [http://localhost:3000](http://localhost:3000)
+   * **Swagger UI (Documentación):** Disponible en [http://localhost:3000/api/docs](http://localhost:3000/api/docs)
+   * **Mongo Express (Gestor de BD):** Disponible en [http://localhost:8081](http://localhost:8081) *(Credenciales: admin / pass)*
+
+---
+
+### Opción B: Modo de Desarrollo Local (Host) 💻
+
+Utiliza este modo si deseas realizar cambios de código en tiempo real con recarga en caliente (*hot-reload*).
+
+1. **Instalar dependencias de Node.js:**
+   ```bash
+   npm install
+   ```
+
+2. **Configurar Variables de Entorno:**
+   ```bash
+   cp .env.example .env
+   ```
+   *(Asegúrate de rellenar los valores correspondientes en el `.env`).*
+
+3. **Levantar base de datos en Docker:**
+   Inicia únicamente el servicio de base de datos en segundo plano:
+   ```bash
+   docker compose up mongodb mongo-express -d
+   ```
+
+4. **Iniciar el Servidor en modo Desarrollo:**
    ```bash
    npm run start:dev
    ```
-   *El servidor levantará en [http://localhost:3000](http://localhost:3000)*
+   *El servidor local levantará en [http://localhost:3000](http://localhost:3000)*
 
 ---
 
