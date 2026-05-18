@@ -12,7 +12,7 @@ import {
     GetSummaryUseCase
 } from './application/use-cases';
 import { LeadDocument, LeadSchema } from './infrastructure/schemas';
-import { LeadController } from './presentation/controllers';
+import { LeadController, WebhookController } from './presentation/controllers';
 import { LeadsAiSummaryService } from './infrastructure/persistance/services';
 
 @Module({
@@ -21,7 +21,7 @@ import { LeadsAiSummaryService } from './infrastructure/persistance/services';
             { name: LeadDocument.name, schema: LeadSchema },
         ]),
     ],
-    controllers: [LeadController],
+    controllers: [LeadController, WebhookController],
     providers: [
         LeadsAiSummaryService,
         // Enlazar la interfaz (ILeadRepository) a la implementación concreta (LeadRepositoryImplementation)
