@@ -1,12 +1,48 @@
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { FountainEnum } from "../enums";
 
 export class LeadEntity { // Entidad de dominio para representar un Lead
+    @ApiProperty({
+        description: 'ID único del lead (ObjectId generado por MongoDB).',
+        example: '6a0b65b18a1f10562c9df8a3'
+    })
     id: string;
+
+    @ApiProperty({
+        description: 'Nombre completo del lead.',
+        example: 'Alejandro Pérez'
+    })
     name: string;
+
+    @ApiProperty({
+        description: 'Correo electrónico único del lead.',
+        example: 'alejandro.perez@example.com'
+    })
     email: string;
+
+    @ApiPropertyOptional({
+        description: 'Número de teléfono del lead.',
+        example: '+573001234567'
+    })
     phone?: string;
+
+    @ApiProperty({
+        description: 'Fuente de procedencia del lead.',
+        enum: FountainEnum,
+        example: FountainEnum.INSTAGRAM
+    })
     fountain: FountainEnum; // este podria ser llamado source, simplemente, es para ver el poder de los mappers
+
+    @ApiPropertyOptional({
+        description: 'Nombre del producto o servicio de interés.',
+        example: 'Curso Avanzado de NestJS'
+    })
     interest_product?: string;
+
+    @ApiPropertyOptional({
+        description: 'Presupuesto disponible en USD.',
+        example: 250
+    })
     budget?: number;
 
     isEmailValid(): boolean {

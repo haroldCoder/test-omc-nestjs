@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { LeadDocument, LeadSchema, LeadRepositoryImplementation } from './infrastructure/persistance';
+import { LeadRepositoryImplementation } from './infrastructure/persistance';
 import { ILeadRepository } from './domain/repositories';
 import {
     CreateLeadUseCase,
@@ -9,6 +9,8 @@ import {
     UpdateLeadUseCase,
     DeleteLeadUseCase,
 } from './application/use-cases';
+import { LeadDocument, LeadSchema } from './infrastructure/schemas';
+import { LeadController } from './presentation/controllers';
 
 @Module({
     imports: [
@@ -16,6 +18,7 @@ import {
             { name: LeadDocument.name, schema: LeadSchema },
         ]),
     ],
+    controllers: [LeadController],
     providers: [
         // Enlazar la interfaz (ILeadRepository) a la implementación concreta (LeadRepositoryImplementation)
         {
@@ -38,4 +41,4 @@ import {
         DeleteLeadUseCase,
     ],
 })
-export class LeadsModule {}
+export class LeadsModule { }
