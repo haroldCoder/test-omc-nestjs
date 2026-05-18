@@ -23,8 +23,14 @@ export class LeadController {
     @ApiBody({ type: CreateLeadDto })
     @ApiResponse({ status: 201, description: 'Lead creado de forma exitosa. Retorna el ID único del lead.', type: String })
     @ApiResponse({ status: 400, description: 'Petición inválida por errores en la estructura del DTO o datos inválidos.' })
-    async create(@Body() data: CreateLeadDto): Promise<string> {
-        return this.createLeadUseCase.execute(data);
+    async create(@Body() data: CreateLeadDto): Promise<{
+        message: string;
+        data: string;
+    }> {
+        return {
+            message: 'Lead creado exitosamente.',
+            data: await this.createLeadUseCase.execute(data),
+        };
     }
 
     @Get()
@@ -107,8 +113,14 @@ export class LeadController {
     @ApiResponse({ status: 200, description: 'Lead actualizado exitosamente. Retorna el ID del lead actualizado.', type: String })
     @ApiResponse({ status: 400, description: 'Petición inválida por errores en la estructura de los datos del lead.' })
     @ApiResponse({ status: 404, description: 'El lead solicitado para actualizar no existe.' })
-    async update(@Param('id') id: string, @Body() data: UpdateLeadDto): Promise<string> {
-        return this.updateLeadUseCase.execute(id, data);
+    async update(@Param('id') id: string, @Body() data: UpdateLeadDto): Promise<{
+        message: string;
+        data: string;
+    }> {
+        return {
+            message: 'Lead actualizado exitosamente.',
+            data: await this.updateLeadUseCase.execute(id, data),
+        };
     }
 
     @Delete(':id')
@@ -116,8 +128,14 @@ export class LeadController {
     @ApiParam({ name: 'id', description: 'ID único del lead a eliminar', example: '6a0b65b18a1f10562c9df8a3' })
     @ApiResponse({ status: 200, description: 'Lead eliminado exitosamente. Retorna el ID del lead eliminado.', type: String })
     @ApiResponse({ status: 404, description: 'El lead solicitado para eliminar no existe.' })
-    async delete(@Param('id') id: string): Promise<string> {
-        return this.deleteLeadUseCase.execute(id);
+    async delete(@Param('id') id: string): Promise<{
+        message: string;
+        data: string;
+    }> {
+        return {
+            message: 'Lead eliminado exitosamente.',
+            data: await this.deleteLeadUseCase.execute(id),
+        };
     }
 
 }
