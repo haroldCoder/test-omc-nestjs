@@ -39,7 +39,7 @@ export class LeadEntity { // Entidad de dominio para representar un Lead
         }
     }
 
-    create(data: Omit<LeadEntity, 'id'>) { // Método para crear un Lead, con las reglas de negocio necesarias para validar la información antes de ser creada
+    create(data: LeadProperties) { // Método para crear un Lead, con las reglas de negocio necesarias para validar la información antes de ser creada
         this.name = data.name;
         this.email = data.email;
         this.phone = data.phone;
@@ -52,3 +52,5 @@ export class LeadEntity { // Entidad de dominio para representar un Lead
         }
     }
 }
+
+export type LeadProperties = Omit<LeadEntity, 'id' | 'create' | 'update' | 'isEmailValid' | 'isNameValid' | 'isFountainValid' | 'isValid'>;

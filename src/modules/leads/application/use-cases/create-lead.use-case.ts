@@ -1,4 +1,4 @@
-import { LeadEntity } from "../../domain/entities";
+import { LeadEntity, LeadProperties } from "../../domain/entities";
 import { ILeadRepository } from "../../domain/repositories";
 import { Injectable } from "@nestjs/common";
 
@@ -6,7 +6,7 @@ import { Injectable } from "@nestjs/common";
 export class CreateLeadUseCase {
     constructor(private readonly leadRepository: ILeadRepository) { }
 
-    async execute(data: Omit<LeadEntity, 'id'>): Promise<string> {
+    async execute(data: LeadProperties): Promise<string> {
         const lead = new LeadEntity();
         lead.create(data);
         const id = await this.leadRepository.create(lead);
