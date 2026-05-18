@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Get, Param, Put, Delete, Query } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from "@nestjs/swagger";
-import { CreateLeadUseCase, FindAllLeadsUseCase, FindLeadUseCase, UpdateLeadUseCase, DeleteLeadUseCase } from "../../application/use-cases";
-import { LeadEntity } from "../../domain/entities";
+import { CreateLeadUseCase, FindAllLeadsUseCase, FindLeadUseCase, UpdateLeadUseCase, DeleteLeadUseCase, GetStatsUseCase } from "../../application/use-cases";
+import { LeadEntity, StatsEntity } from "../../domain/entities";
 import { CreateLeadDto, LeadQueriesDto, UpdateLeadDto } from "../dtos";
 import { FountainEnum } from "../../domain/enums";
 
@@ -13,7 +13,8 @@ export class LeadController {
         private readonly findAllLeadsUseCase: FindAllLeadsUseCase,
         private readonly findLeadUseCase: FindLeadUseCase,
         private readonly updateLeadUseCase: UpdateLeadUseCase,
-        private readonly deleteLeadUseCase: DeleteLeadUseCase
+        private readonly deleteLeadUseCase: DeleteLeadUseCase,
+        private readonly getStatsUseCase: GetStatsUseCase
     ) { }
 
     @Post()
@@ -62,6 +63,14 @@ export class LeadController {
         return this.findAllLeadsUseCase.execute(queries);
     }
 
+    @Get('stats')
+    @ApiOperation({ summary: 'Obtener estadísticas de leads', description: 'Obtiene estadísticas generales sobre los leads registrados en el sistema.' })
+    @ApiResponse({ status: 200, description: 'Estadísticas obtenidas exitosamente.', type: StatsEntity })
+    @ApiResponse({ status: 500, description: 'Error interno del servidor al obtener las estadísticas.' })
+    async stats(): Promise<StatsEntity> {
+        return this.getStatsUseCase.execute();
+    }
+
     @Get(':id')
     @ApiOperation({ summary: 'Obtener un lead por su ID', description: 'Busca un lead específico en la base de datos por su ID único.' })
     @ApiParam({ name: 'id', description: 'ID único del lead (representado como un ObjectId en formato hexadecimal)', example: '6a0b65b18a1f10562c9df8a3' })
@@ -90,4 +99,5 @@ export class LeadController {
     async delete(@Param('id') id: string): Promise<string> {
         return this.deleteLeadUseCase.execute(id);
     }
+
 }

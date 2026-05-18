@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LeadEntity, LeadQueriesEntity } from '../../domain/entities';
+import { LeadEntity, LeadQueriesEntity, StatsEntity } from '../../domain/entities';
 import { ILeadRepository } from '../../domain/repositories';
 import { LeadNotFoundException } from '../../domain/exception';
 import { LeadDocument } from '../schemas';
@@ -107,5 +107,52 @@ export class LeadRepositoryImplementation implements ILeadRepository {
         }
 
         return lead.id;
+    }
+
+    async stats(): Promise<StatsEntity> {
+        // 1. Total de leads
+        const total_leads = await this.leadModel.countDocuments();
+
+        // 2. Leads agrupados por fuente (source en DB)
+        const fountainAggregation = await this.leadModel.aggregate([
+            {
+                $group: {
+                    _id: '$source',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+        const leads_by_fountain: { [fountain: string]: number } = {};
+        for (const item of fountainAggregation) {
+            const key = item._id ?? 'other';
+            leads_by_fountain[key] = item.count;
+        }
+
+        // 3. Promedio del presupuesto (budget)
+        const budgetAggregation = await this.leadModel.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    averageBudget: { $avg: '$budget' }
+                }
+            }
+        ]);
+        const budget_average = budgetAggregation.length > 0 ? Number(budgetAggregation[0].averageBudget.toFixed(2)) : 0;
+
+        // 4. Leads de los últimos 7 días
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const docs = await this.leadModel.find({
+            created_at: { $gte: sevenDaysAgo }
+        }).sort({ created_at: -1 });
+
+        const leads_last_seven_days = docs.map(doc => LeadMapper.toDomain(doc));
+
+        return new StatsEntity({
+            total_leads,
+            leads_by_fountain,
+            budget_average,
+            leads_last_seven_days
+        });
     }
 }

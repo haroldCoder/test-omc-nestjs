@@ -8,6 +8,7 @@ import {
     FindLeadUseCase,
     UpdateLeadUseCase,
     DeleteLeadUseCase,
+    GetStatsUseCase
 } from './application/use-cases';
 import { LeadDocument, LeadSchema } from './infrastructure/schemas';
 import { LeadController } from './presentation/controllers';
@@ -31,6 +32,7 @@ import { LeadController } from './presentation/controllers';
         FindLeadUseCase,
         UpdateLeadUseCase,
         DeleteLeadUseCase,
+        GetStatsUseCase
     ],
     exports: [
         ILeadRepository,
@@ -39,6 +41,7 @@ import { LeadController } from './presentation/controllers';
         FindLeadUseCase,
         UpdateLeadUseCase,
         DeleteLeadUseCase,
+        GetStatsUseCase
     ],
 })
 export class LeadsModule { }
