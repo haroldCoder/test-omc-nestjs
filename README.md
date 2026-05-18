@@ -1,98 +1,156 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📊 OMC Leads Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Una API REST premium de alto rendimiento diseñada con una arquitectura limpia, estructurada en capas y modular, construida para registrar, buscar, filtrar y analizar "leads" (contactos de clientes potenciales) en tiempo real, integrando análisis avanzados y generación de resúmenes ejecutivos impulsados por Inteligencia Artificial (**Google Gemini**).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🛠️ Tecnologías Usadas y Justificación
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Para este proyecto se seleccionaron herramientas modernas e industriales de la más alta calidad:
 
-## Project setup
+* **NestJS (V11):** Elegido como el framework de backend principal porque **es la tecnología de desarrollo del lado del servidor que mejor conozco, domino y con la que me siento más cómodo y eficiente**. Su arquitectura estructurada basada en inyección de dependencias me permite crear un sistema mantenible, desacoplado y de nivel empresarial altamente escalable.
+* **MongoDB & Mongoose (V9):** Base de datos NoSQL robusta y flexible elegida por su capacidad para manejar esquemas dinámicos e irregulares (típico de leads de marketing) sin penalizar el rendimiento. Permite búsquedas agregadas de alto rendimiento.
+* **Google Gemini API (`gemini-2.5-flash`):** Integrado como el proveedor de LLM premium. Su velocidad, rentabilidad e inteligencia superior lo convierten en la opción perfecta para procesar el JSON de leads y generar reportes analíticos y recomendaciones ejecutivas. Ademas de que es gratuita.
+* **Jest:** Framework de testing unitario y de integración para garantizar estabilidad absoluta en cada release.
+* **Swagger (OpenAPI):** Para auto-documentar de forma interactiva y detallada cada endpoint de la API con tipado y descripciones enriquecidas.
+* **Docker & Docker Compose:** Para simplificar al 100% el despliegue local de la base de datos y la inicialización limpia de colecciones y seeds.
 
+---
+
+## 🚀 Requisitos Previos
+
+Asegúrate de tener instalados en tu sistema local:
+* **Node.js** (versión 18 o superior)
+* **npm** (versión 9 o superior)
+* **Docker** y **Docker Compose**
+
+---
+
+## 📦 Instalación e Inicio de la Aplicación
+
+1. **Clonar e ingresar al repositorio:**
+   ```bash
+   cd /home/koder/Documentos/test-omc-nestjs
+   ```
+
+2. **Instalar dependencias de Node.js:**
+   ```bash
+   npm install
+   ```
+
+3. **Configurar Variables de Entorno:**
+   Copia el archivo de ejemplo para crear tu archivo `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   *Nota: Abre el archivo `.env` resultante y configura tu `GEMINI_API_KEY` (clave de Google AI Studio) para habilitar el resumen real de IA.*
+
+4. **Levantar base de datos en Docker:**
+   Inicia el contenedor de MongoDB en segundo plano:
+   ```bash
+   docker-compose up -d
+   ```
+
+5. **Iniciar el Servidor en modo Desarrollo:**
+   ```bash
+   npm run start:dev
+   ```
+   *El servidor levantará en [http://localhost:3000](http://localhost:3000)*
+
+---
+
+## 🌱 Sembrado de Datos (Seed)
+
+La base de datos cuenta con una inicialización automatizada. Al levantar el entorno con `docker-compose up -d`, Docker ejecuta automáticamente el script de inicialización ubicado en `scripts/init-mongo.js`. 
+
+Este script realiza:
+1. La creación limpia de la base de datos `omc_leads_db` y la colección `leads`.
+2. Define restricciones estrictas de tipo **JSON Schema Validator** a nivel físico de base de datos.
+3. Configura un **índice único** para el campo `email`.
+4. Siembra **10 leads reales altamente detallados** con presupuestos y orígenes variados.
+
+### ¿Cómo re-sembrar la base de datos manualmente?
+Si por algún motivo deseas limpiar y re-sembrar la base de datos de manera manual, puedes ejecutar en tu terminal:
 ```bash
-$ npm install
+docker-compose exec -T mongodb mongosh mongodb://localhost:27017/omc_leads_db /scripts/init-mongo.js
 ```
 
-## Compile and run the project
+---
 
+## 🗺️ Ejemplos de Cómo Probar los Endpoints (cURL)
+
+La API cuenta con soporte completo interactivo en Swagger. Puedes ingresar a la interfaz visual desde tu navegador en:  
+👉 **[http://localhost:3000/api/docs](http://localhost:3000/api/docs)**
+
+También puedes probar los endpoints principales utilizando `curl` en tu terminal:
+
+### 1. Registrar un Lead (Creación)
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+curl -X POST http://localhost:3000/api/v1/leads \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Clara Dominguez",
+    "email": "clara.dominguez@example.com",
+    "phone": "+573123456789",
+    "fountain": "facebook",
+    "interest_product": "Curso Avanzado de NestJS",
+    "budget": 250
+  }'
 ```
 
-## Run tests
-
+### 2. Listar Leads (Con paginación, filtros y ordenación determinista)
+Obtiene los leads registrados. Soporta filtros dinámicos estables para evitar solapamiento entre páginas:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+curl -s "http://localhost:3000/api/v1/leads?page=1&limit=5&fountain=facebook&range_date=2026-05-01,2026-05-31"
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### 3. Obtener Estadísticas Avanzadas de Leads (`/stats`)
+Obtiene agrupaciones reales en MongoDB con el total de leads por fuente, el presupuesto promedio exacto y los leads creados en los últimos 7 días:
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+curl -s http://localhost:3000/api/v1/leads/stats
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 4. Generar Resumen Ejecutivo Inteligente por IA (`/ai/summary`)
+Genera un análisis en formato markdown utilizando la API de Google Gemini. Soporta filtrado previo por fechas y fuente. Si no hay `GEMINI_API_KEY` en el `.env`, el servidor utiliza su **Fallback Analítico Inteligente** basado en cálculos matemáticos exactos en tiempo real:
+```bash
+curl -s "http://localhost:3000/api/v1/leads/ai/summary?fountain=facebook&range_date=2026-04-01,2026-05-31"
+```
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## 🛡️ Manejo de Errores Consistente
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Toda la API sigue una estructura de gestión de errores centralizada y predecible. El sistema maneja dos tipos de errores principales:
 
-## Support
+1. **Excepciones de Dominio (Capa de Negocio):**  
+   Implementamos excepciones específicas para encapsular reglas de negocio, tales como `LeadNotFoundException` o fallos en formatos. Estas son capturadas de forma consistente por NestJS y transformadas en respuestas HTTP enriquecidas:
+   ```json
+   {
+     "statusCode": 404,
+     "message": "El lead solicitado no existe.",
+     "error": "Not Found"
+   }
+   ```
+2. **Validación Automática de DTOs (`ValidationPipe`):**  
+   Gracias a `class-validator` y `class-transformer`, cada endpoint que recibe datos (como `POST /leads` o queries en `GET /leads`) valida de manera estricta los datos de entrada antes de tocar el controlador. Si hay campos inválidos, retorna un JSON estructurado con todos los detalles en español:
+   ```json
+   {
+     "statusCode": 400,
+     "message": [
+       "email debe ser un correo electrónico válido",
+       "budget debe ser un número entero"
+     ],
+     "error": "Bad Request"
+   }
+   ```
+   
+Toda respuesta de error en la API garantiza ser **consistente en formato, código HTTP e idioma de cara al cliente**, previniendo fugas de información interna de base de datos.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## 🧪 Ejecutar la Suite de Pruebas Unitarias
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Para asegurar que ningún cambio rompa la lógica del negocio o de la IA, ejecuta Jest:
+```bash
+npm run test
+```
