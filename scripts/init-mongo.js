@@ -43,6 +43,14 @@ db.createCollection('leads', {
         budget: {
           bsonType: 'number',
           description: 'El presupuesto estimado es opcional y debe ser un número flotante o entero en USD.'
+        },
+        created_at: {
+          bsonType: 'date',
+          description: 'La fecha de creación es opcional y debe ser un objeto Date.'
+        },
+        updated_at: {
+          bsonType: 'date',
+          description: 'La fecha de actualización es opcional y debe ser un objeto Date.'
         }
       }
     }
@@ -63,7 +71,9 @@ const sampleLeads = [
     phone: '+573001234567',
     source: 'instagram',
     productInterest: 'Curso Avanzado de NestJS',
-    budget: 250.00
+    budget: 250.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Beatriz Gómez',
@@ -71,7 +81,9 @@ const sampleLeads = [
     phone: '+5491123456789',
     source: 'facebook',
     productInterest: 'Mentoría Backend Pro',
-    budget: 500.00
+    budget: 500.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Carlos Mendoza',
@@ -79,7 +91,9 @@ const sampleLeads = [
     phone: '+525512345678',
     source: 'landing_page',
     productInterest: 'Taller de Arquitectura Limpia',
-    budget: 150.00
+    budget: 150.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Diana Restrepo',
@@ -87,7 +101,9 @@ const sampleLeads = [
     phone: '+573109876543',
     source: 'referred',
     productInterest: 'Curso Avanzado de NestJS',
-    budget: 250.00
+    budget: 250.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Eduardo Silva',
@@ -95,7 +111,9 @@ const sampleLeads = [
     phone: '+13055550199',
     source: 'other',
     productInterest: 'Consultoría Corporativa',
-    budget: 1200.00
+    budget: 1200.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Fernanda López',
@@ -103,7 +121,9 @@ const sampleLeads = [
     phone: '+56987654321',
     source: 'instagram',
     productInterest: 'Curso Avanzado de NestJS',
-    budget: 250.00
+    budget: 250.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Gabriel Torres',
@@ -111,7 +131,9 @@ const sampleLeads = [
     phone: '+51987654321',
     source: 'landing_page',
     productInterest: 'Taller de Microservicios',
-    budget: 350.00
+    budget: 350.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Helena Ruiz',
@@ -119,7 +141,9 @@ const sampleLeads = [
     phone: '+34600123456',
     source: 'referred',
     productInterest: 'Mentoría Backend Pro',
-    budget: 500.00
+    budget: 500.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Ignacio Ortiz',
@@ -127,7 +151,9 @@ const sampleLeads = [
     phone: '+593987654321',
     source: 'facebook',
     productInterest: 'Taller de Arquitectura Limpia',
-    budget: 150.00
+    budget: 150.00,
+    created_at: new Date(),
+    updated_at: new Date()
   },
   {
     name: 'Juana Guerrero',
@@ -135,7 +161,9 @@ const sampleLeads = [
     phone: '+573151234567',
     source: 'other',
     productInterest: 'Curso Avanzado de NestJS',
-    budget: 250.00
+    budget: 250.00,
+    created_at: new Date(),
+    updated_at: new Date()
   }
 ];
 
