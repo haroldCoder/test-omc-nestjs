@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-omc-nestjs-deployment
+  labels:
+    app: test-omc-nestjs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-omc-nestjs
+  template:
+    metadata:
+      labels:
+        app: test-omc-nestjs
+    spec:
+      containers:
+      - name: test-omc-nestjs
+        image: devopskoder/test-omc-nestjs:v1 # Asegúrate de cambiar esto por la imagen en tu registro (ej: tu-registry/test-omc-nestjs:v1)
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        # Aquí puedes definir las variables de entorno necesarias para la aplicación, por ejemplo la conexión a MongoDB:
+        - name: MONGO_URI
+          value: "mongodb://mongodb-service:27017/omc_leads_db"
+        - name: GEMINI_API_KEY
+          value: ${{ secrets.GEMINI_API_KEY }}
+        - name: JWT_SECRET
+          value: "super_secret_nest_jwt_key_123456"
+        - name: JWT_EXPIRATION
+          value: "24h"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "20m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-omc-nestjs-service
+  labels:
+    app: test-omc-nestjs
+spec:
+  type: ClusterIP # Puedes cambiar a LoadBalancer si necesitas exponerlo externamente de forma directa
+  selector:
+    app: test-omc-nestjs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

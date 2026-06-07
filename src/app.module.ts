@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './core/infrastructure/database/database.module';
 import { LeadsModule } from './modules/leads/leads.module';
-import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -16,7 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     ThrottlerModule.forRoot([{
       ttl: 60000, // 1 minuto
-      limit: 60,  // Límite de 60 peticiones por minuto por IP o Token de forma global
+      limit: 100000,  // Límite modificado temporalmente para pruebas de estrés (K6)
     }]),
     DatabaseModule, // Conexión global a MongoDB
     LeadsModule, // Módulo de Leads (Mongoose Schema, Casos de Uso y Repositorios)
@@ -25,10 +23,10 @@ import { AuthModule } from './modules/auth/auth.module';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: CustomThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: CustomThrottlerGuard,
+    // },
   ],
 })
-export class AppModule {}
+export class AppModule { }
